@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="所有文章 - ChuangLian's AI Blog">
+  <h1 class="page-title">所有文章</h1>
+  <p class="page-desc">共 {posts.length} 篇文章</p>
+
+  <ul class="post-list">
+    {posts.map((post) => (
+      <li>
+        <a href={`${base}blog/${post.id}/`}>
+          <article class="post-card">
+            <h2>{post.data.title}</h2>
+            <p class="post-desc">{post.data.description}</p>
+            <div class="post-info">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+              {post.data.tags.length > 0 && (
+                <div class="tags">
+                  {post.data.tags.map((tag: string) => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  .page-title {
+    margin-top: 0;
+  }
+
+  .page-desc {
+    color: var(--color-text-secondary);
+    margin-bottom: 2em;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .post-list a {
+    color: inherit;
+    display: block;
+  }
+
+  .post-card {
+    padding: 1.2em 1.5em;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .post-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.1);
+  }
+
+  .post-card h2 {
+    margin: 0 0 0.4em;
+    font-size: 1.15em;
+  }
+
+  .post-desc {
+    color: var(--color-text-secondary);
+    font-size: 0.93em;
+    margin-bottom: 0.6em;
+  }
+
+  .post-info {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    font-size: 0.82em;
+    color: var(--color-text-secondary);
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4em;
+  }
+
+  .tag {
+    color: var(--color-accent);
+  }
+</style>

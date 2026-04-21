@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="ChuangLian's AI Blog">
+  <section class="hero">
+    <h1>ChuangLian is here</h1>
+    <p>记录 AI 领域的探索、学习和思考。</p>
+  </section>
+
+  <section class="recent-posts">
+    <h2>最新文章</h2>
+    <ul class="post-list">
+      {posts.map((post) => (
+        <li>
+          <a href={`${base}blog/${post.id}/`}>
+            <article class="post-card">
+              <h3>{post.data.title}</h3>
+              <p class="post-desc">{post.data.description}</p>
+              <div class="post-info">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+                {post.data.tags.length > 0 && (
+                  <div class="tags">
+                    {post.data.tags.map((tag: string) => (
+                      <span class="tag">#{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </article>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 2em 0 3em;
+  }
+
+  .hero h1 {
+    font-size: 2.2em;
+    margin: 0 0 0.4em;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 1.15em;
+    color: var(--color-text-secondary);
+  }
+
+  .recent-posts h2 {
+    margin-top: 0;
+    margin-bottom: 1em;
+    font-size: 1.3em;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .post-list a {
+    color: inherit;
+    display: block;
+  }
+
+  .post-card {
+    padding: 1.2em 1.5em;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .post-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.1);
+  }
+
+  .post-card h3 {
+    margin: 0 0 0.4em;
+    font-size: 1.15em;
+  }
+
+  .post-desc {
+    color: var(--color-text-secondary);
+    font-size: 0.93em;
+    margin-bottom: 0.6em;
+  }
+
+  .post-info {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    font-size: 0.82em;
+    color: var(--color-text-secondary);
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4em;
+  }
+
+  .tag {
+    color: var(--color-accent);
+  }
+</style>

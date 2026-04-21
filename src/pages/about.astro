@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="关于 - ChuangLian's AI Blog">
+  <article class="about">
+    <h1>关于我</h1>
+    <p>
+      Hi, 我是 ChuangLian。这个博客用来记录我在 AI 领域的学习和探索。
+    </p>
+    <p>
+      这里你会看到关于大语言模型、机器学习、深度学习、AI 应用开发等方面的内容。
+      既有技术深度的分析，也有入门友好的科普。
+    </p>
+    <h2>联系方式</h2>
+    <ul>
+      <li>GitHub: <a href="https://github.com/chuanglian" target="_blank">@ChuangLian</a></li>
+    </ul>
+  </article>
+</BaseLayout>
+
+<style>
+  .about h1 {
+    margin-top: 0;
+  }
+
+  .about p {
+    color: var(--color-text-secondary);
+    font-size: 1.05em;
+  }
+
+  .about ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .about li {
+    margin-bottom: 0.5em;
+  }
+</style>
